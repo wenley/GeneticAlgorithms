@@ -22,6 +22,34 @@ public class Population {
     this.validCharacters = bases;
   }
 
+  public static Population of(Set<Character> validCharacters, int size, Random random) {
+    Set<Genome> population = new HashSet<>();
+    for (int i = 0; i < size; i++) {
+      population.add(randomGenome(validCharacters, 5, random));
+    }
+
+    return new Population(population, validCharacters);
+  }
+
+  private static Genome randomGenome(Set<Character> validCharacters, int length, Random random) {
+    StringBuilder genome = new StringBuilder();
+    List<Character> characters = new ArrayList<>();
+
+    for (Character c : validCharacters) {
+      characters.add(c);
+    }
+
+    for (int i = 0; i < length; i++) {
+      genome.append(MyLists.sample(characters, random));
+    }
+
+    return Genome.of(genome.toString());
+  }
+
+  public Iterable<Genome> genomes() {
+    return population;
+  }
+
   public Population fromFittestParents(Function<Genome, Double> fitness, int numParents, Random random) {
     Breeding breeder = new Breeding(validCharacters, random);
     List<Genome> parents = population.stream()
@@ -46,30 +74,5 @@ public class Population {
     }
 
     return new Population(newPopulation, validCharacters);
-  }
-
-  public static Population ofSize(int size, Random random) {
-    Set<Character> chars = new HashSet<>();
-    Set<Genome> population = new HashSet<>();
-    for (int i = 0; i < size; i++) {
-      population.add(randomGenome(chars, 5, random));
-    }
-
-    return new Population(population, chars);
-  }
-
-  private static Genome randomGenome(Set<Character> validCharacters, int length, Random random) {
-    StringBuilder genome = new StringBuilder();
-    List<Character> characters = new ArrayList<>();
-
-    for (Character c : validCharacters) {
-      characters.add(c);
-    }
-
-    for (int i = 0; i < length; i++) {
-      genome.append(MyLists.sample(characters, random));
-    }
-
-    return Genome.of(genome.toString());
   }
 }

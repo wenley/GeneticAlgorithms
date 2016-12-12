@@ -28,7 +28,7 @@ public class Genome {
     return new Genome(genome);
   }
 
-  String getGenome() {
+  public String getGenome() {
     return genome;
   }
 
@@ -38,6 +38,11 @@ public class Genome {
       if (history.endsWith(key)) {
         potential.add(behaviors.get(key));
       }
+    }
+
+    if (potential.size() == 0) {
+      // TODO : Better than hacky default
+      return 'R';
     }
 
     return MyLists.sample(potential, random);
