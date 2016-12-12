@@ -1,7 +1,7 @@
 package com.wenley.genome;
 
-import java.math.BigDecimal;
 import java.util.Random;
+import java.util.Set;
 
 public class Breeding {
   // Note: Misalignment effectively does insertion mutations
@@ -10,7 +10,15 @@ public class Breeding {
   private static final double MUTATION_RATE = 0.01;
   private static final double CHOPPING_RATE = 0.01;
 
-  public static Genome breed(Genome left, Genome right, Random random) {
+  private final Set<Character> validCharacters;
+  private final Random random;
+
+  public Breeding(Set<Character> validCharacters, Random random) {
+    this.validCharacters = validCharacters;
+    this.random = random;
+  }
+
+  public Genome breed(Genome left, Genome right) {
     // The alignment of right relative to left
     // If negative, right is aligned before left
     int misalignment = getMisalignment(random);

@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import com.wenley.util.MyLists;
 
 public class Genome {
-  private static final int CROSSING_FACTOR = 0;
   // TODO: Make this a Trie to enable better prefix matching
   // TODO: Allow repeats of same segment to weight probabilities
   private final String genome;
