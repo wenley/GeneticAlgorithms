@@ -18,7 +18,7 @@ public class Evolution {
 
   public void run() {
     Random random = new Random(SEED);
-    Population initial = Population.of(RockPaperScissors.Move.moves(), POPULATION_SIZE, random);
+    Population initial = Population.of(RockPaperScissors.Move.characterSet(), POPULATION_SIZE, random);
     List<Population> iterations = new ArrayList<>();
 
     iterations.add(initial);

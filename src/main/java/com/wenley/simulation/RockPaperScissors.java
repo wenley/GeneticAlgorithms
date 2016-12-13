@@ -1,6 +1,7 @@
 package com.wenley.simulation;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -15,12 +16,11 @@ public class RockPaperScissors {
     PAPER('P'),
     SCISSORS('S');
 
-    private static final Set<Character> moves = new HashSet<>();
+    private static final Set<Move> moves = new HashSet<>();
     static {
-      moves.add('R');
-      moves.add('P');
-      moves.add('S');
-      moves.add(',');
+      moves.add(ROCK);
+      moves.add(PAPER);
+      moves.add(SCISSORS);
     }
 
     private final char code;
@@ -29,8 +29,14 @@ public class RockPaperScissors {
       this.code = code;
     }
 
-    public static Set<Character> moves() {
+    public static Set<Move> moves() {
       return moves;
+    }
+
+    public static Set<Character> characterSet() {
+      Set<Character> set = new HashSet<Character>(moves.stream().map(move -> move.code).collect(Collectors.toSet()));
+      set.add(',');
+      return set;
     }
 
     public static Move fromCode(char code) {
