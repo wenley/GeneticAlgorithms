@@ -50,27 +50,23 @@ public class Population {
     return population;
   }
 
-  public Population fromFittestParents(Function<Genome, Double> fitness, int numParents, Random random) {
-    Breeding breeder = new Breeding(validCharacters, random);
-    List<Genome> parents = population.stream()
-      .sorted(new Comparator<Genome>() {
-        public int compare(Genome one, Genome two) {
-          double x = fitness.apply(one);
-          double y = fitness.apply(two);
-
-          if (x < y) { return -1; }
-          else if (x > y) { return 1; }
-          else { return 0; }
-        }
-      }).limit(numParents)
+  public List<Genome> fittestParents(Function<Genome, Double> fitness, int numParents) {
+    return population.stream()
+      .sorted(Comparator.comparing(fitness))
+      .limit(numParents)
       .collect(Collectors.toList());
+  }
 
+  public Population fromFittestParents(Function<Genome, Double> fitness, int numParents, int numNewGenomes, Random random) {
+    List<Genome> parentPopulation = fittestParents(fitness, numParents);
+
+    Breeding breeder = new Breeding(validCharacters, random);
     Set<Genome> newPopulation = new HashSet<>();
-    for (int i = 0; i < population.size(); i++) {
-      // Some possibility of self-breeding
-      Genome left = MyLists.sample(parents, random);
-      Genome right = MyLists.sample(parents, random);
-      newPopulation.add(breeder.breed(left, right));
+    for (int i = 0; i < numNewGenomes; i++) {
+      newPopulation.add(randomGenome(validCharacters, 5, random));
+    }
+    for (int i = numNewGenomes; i < population.size(); i++) {
+      newPopulation.add(breeder.offspring(parentPopulation));
     }
 
     return new Population(newPopulation, validCharacters);

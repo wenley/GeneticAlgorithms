@@ -1,10 +1,12 @@
 package com.wenley.simulation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.StreamSupport;
 import com.wenley.genome.Genome;
 import com.wenley.simulation.Population;
 import com.wenley.simulation.RockPaperScissors;
@@ -14,6 +16,7 @@ public class Evolution {
   private static final int POPULATION_ITERATIONS = 100;
   private static final int POPULATION_SIZE = 100;
   private static final int PARENT_POPULATION_SIZE = 10;
+  private static final int NEW_GENOMES_PER_GENERATION = 2;
   private static final long SEED = 123456;
 
   public void run() {
@@ -34,12 +37,19 @@ public class Evolution {
           wins.put(genome, score);
         }
       }
+
       Population nextPopulation = lastPopulation.fromFittestParents(genome -> {
         return (double) wins.get(genome);
-      }, PARENT_POPULATION_SIZE, random);
+      }, PARENT_POPULATION_SIZE, NEW_GENOMES_PER_GENERATION, random);
       iterations.add(nextPopulation);
       lastPopulation = nextPopulation;
+
+      int maxGenomeLength = StreamSupport.stream(lastPopulation.genomes().spliterator(), false)
+        .map(genome -> genome.getGenome().length())
+        .max(Comparator.naturalOrder())
+        .orElse(0);
       System.out.println("Finished running generation " + i);
+      System.out.println("Max genome length: " + maxGenomeLength);
     }
 
     System.out.println("Final Genomes:");
